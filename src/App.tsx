@@ -3,48 +3,78 @@ import { BRAND_NAME, CONTACT_EMAIL, PHONE_NUMBER } from "./config";
 
 const STEPS = [
   {
-    number: "1",
+    number: "01",
     title: "Tell us about your house",
     body: "Fill out the short form. It takes about 2 minutes, and there's no obligation.",
   },
   {
-    number: "2",
+    number: "02",
     title: "Get your written offer within 24 hours",
     body: "We look at your house and the local market, then send you a straightforward written cash offer within 24 hours. No lowball games, no pressure.",
   },
   {
-    number: "3",
+    number: "03",
     title: "You decide",
     body: "If the number works for you, we close on your timeline. If it doesn't, no hard feelings — you decide if it works.",
   },
 ];
 
-const SITUATIONS = [
+const METRICS = [
   {
-    title: "Facing foreclosure",
-    body: "If a sale date is coming up, a fast cash close can stop the clock. We move quickly when time matters.",
+    value: "24 hrs",
+    label: "Written offer turnaround",
   },
   {
-    title: "Inherited a house",
-    body: "A house you didn't ask for shouldn't become a second job. We buy as-is, so you don't have to clean it out or fix it up.",
+    value: "7–14 days",
+    label: "Flexible closing",
   },
   {
-    title: "Tired of repairs",
-    body: "Roof, foundation, plumbing — whatever it needs, we buy the house as it sits. You don't lift a finger.",
-  },
-  {
-    title: "Problem tenants",
-    body: "Done being a landlord? We buy tenant-occupied houses too, and handle the transition after closing.",
-  },
-  {
-    title: "Going through a divorce",
-    body: "A clean, fast sale can be one less thing to work through. We keep the process simple and straightforward.",
-  },
-  {
-    title: "Need to move fast",
-    body: "Job change, family, or just ready for what's next — we close on your schedule, not ours.",
+    value: "$0",
+    label: "Fees or commissions",
   },
 ];
+
+type SituationIconKind =
+  | "clock"
+  | "house"
+  | "wrench"
+  | "users"
+  | "split"
+  | "bolt";
+
+const SITUATIONS: { title: string; body: string; icon: SituationIconKind }[] =
+  [
+    {
+      title: "Facing foreclosure",
+      body: "If a sale date is coming up, a fast cash close can stop the clock. We move quickly when time matters.",
+      icon: "clock",
+    },
+    {
+      title: "Inherited a house",
+      body: "A house you didn't ask for shouldn't become a second job. We buy as-is, so you don't have to clean it out or fix it up.",
+      icon: "house",
+    },
+    {
+      title: "Tired of repairs",
+      body: "Roof, foundation, plumbing — whatever it needs, we buy the house as it sits. You don't lift a finger.",
+      icon: "wrench",
+    },
+    {
+      title: "Problem tenants",
+      body: "Done being a landlord? We buy tenant-occupied houses too, and handle the transition after closing.",
+      icon: "users",
+    },
+    {
+      title: "Going through a divorce",
+      body: "A clean, fast sale can be one less thing to work through. We keep the process simple and straightforward.",
+      icon: "split",
+    },
+    {
+      title: "Need to move fast",
+      body: "Job change, family, or just ready for what's next — we close on your schedule, not ours.",
+      icon: "bolt",
+    },
+  ];
 
 const COMPARISON = [
   {
@@ -112,12 +142,12 @@ const FAQS = [
   },
 ];
 
-function CheckIcon() {
+function CheckIcon({ size = 20 }: { size?: number }) {
   return (
     <svg
       viewBox="0 0 24 24"
-      width="20"
-      height="20"
+      width={size}
+      height={size}
       fill="none"
       stroke="currentColor"
       strokeWidth="2.5"
@@ -126,6 +156,57 @@ function CheckIcon() {
       aria-hidden="true"
     >
       <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
+}
+
+function SituationIcon({ kind }: { kind: SituationIconKind }) {
+  const paths: Record<SituationIconKind, React.ReactNode> = {
+    clock: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" />
+      </>
+    ),
+    house: (
+      <>
+        <path d="M3 10.5 12 3l9 7.5" />
+        <path d="M5 9.5V21h14V9.5" />
+        <path d="M10 21v-6h4v6" />
+      </>
+    ),
+    wrench: (
+      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+    ),
+    users: (
+      <>
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </>
+    ),
+    split: (
+      <>
+        <rect x="3" y="4" width="18" height="16" rx="2" />
+        <path d="M12 4v16" />
+      </>
+    ),
+    bolt: <path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z" />,
+  };
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="24"
+      height="24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {paths[kind]}
     </svg>
   );
 }
@@ -187,6 +268,14 @@ export default function App() {
                   <CheckIcon /> Any condition, any situation
                 </li>
               </ul>
+              <dl className="hero-metrics">
+                {METRICS.map((metric) => (
+                  <div key={metric.label} className="hero-metric">
+                    <dt className="hero-metric-value">{metric.value}</dt>
+                    <dd className="hero-metric-label">{metric.label}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
             <div className="hero-form" id="offer">
               <LeadForm />
@@ -196,6 +285,7 @@ export default function App() {
 
         <section className="steps" id="how-it-works">
           <div className="container">
+            <p className="eyebrow">01 / The process</p>
             <h2>How it works</h2>
             <p className="section-intro">
               Three steps. No listings, no open houses, no waiting on a
@@ -217,6 +307,7 @@ export default function App() {
 
         <section className="reasons" id="why-sell">
           <div className="container">
+            <p className="eyebrow">02 / Common situations</p>
             <h2>Why homeowners sell to us</h2>
             <p className="section-intro">
               Life doesn&rsquo;t always give you time for the traditional way
@@ -226,6 +317,9 @@ export default function App() {
             <div className="reasons-grid">
               {SITUATIONS.map((item) => (
                 <article key={item.title} className="reason-card">
+                  <span className="reason-icon" aria-hidden="true">
+                    <SituationIcon kind={item.icon} />
+                  </span>
                   <h3>{item.title}</h3>
                   <p>{item.body}</p>
                 </article>
@@ -236,6 +330,7 @@ export default function App() {
 
         <section className="compare">
           <div className="container">
+            <p className="eyebrow">03 / Comparison</p>
             <h2>Cash sale vs. traditional listing</h2>
             <p className="section-intro">
               The traditional way can work &mdash; but it&rsquo;s slower,
@@ -248,7 +343,9 @@ export default function App() {
                     <th scope="col">
                       <span className="visually-hidden">Category</span>
                     </th>
-                    <th scope="col">Selling to Kirby House Buyers</th>
+                    <th scope="col" className="col-us">
+                      Selling to Kirby House Buyers
+                    </th>
                     <th scope="col">Traditional listing</th>
                   </tr>
                 </thead>
@@ -256,7 +353,12 @@ export default function App() {
                   {COMPARISON.map((row) => (
                     <tr key={row.label}>
                       <th scope="row">{row.label}</th>
-                      <td>{row.us}</td>
+                      <td className="col-us">
+                        <span className="check-cell">
+                          <CheckIcon size={16} />
+                          {row.us}
+                        </span>
+                      </td>
                       <td>{row.traditional}</td>
                     </tr>
                   ))}
@@ -268,15 +370,18 @@ export default function App() {
 
         <section className="band" aria-label="What you won't deal with">
           <div className="container">
-            <p>
-              No repairs. No showings. No commissions. No closing costs. No
-              waiting on a bank.
-            </p>
+            <div className="band-inner">
+              <p>
+                No repairs. No showings. No commissions. No closing costs. No
+                waiting on a bank.
+              </p>
+            </div>
           </div>
         </section>
 
         <section className="faq" id="faq">
           <div className="container faq-inner">
+            <p className="eyebrow">04 / FAQ</p>
             <h2>Questions, answered honestly</h2>
             <div className="faq-list">
               {FAQS.map((faq) => (

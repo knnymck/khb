@@ -1,19 +1,24 @@
 :root {
   --bg: #ffffff;
-  --bg-alt: #f7f7f4;
+  --bg-alt: #f9f8f4;
   --text: #16161a;
-  --text-muted: #5b5b60;
+  --text-muted: #4b5563;
+  --text-faint: #6b7280;
   --accent: #166534;
   --accent-dark: #14532d;
   --accent-soft: #eef6f0;
-  --border: #e6e6e2;
+  --sage: #f2f7f4;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-hover: rgba(22, 101, 52, 0.35);
   --error: #b91c1c;
   --error-bg: #fef2f2;
   --radius: 12px;
-  --shadow: 0 12px 32px rgba(22, 22, 26, 0.08), 0 2px 8px rgba(22, 22, 26, 0.04);
+  --radius-lg: 16px;
 
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
+  --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
 
   font-family: var(--sans);
   font-size: 17px;
@@ -40,24 +45,24 @@ body {
 h1,
 h2,
 h3 {
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
   margin: 0;
 }
 
 h1 {
   font-size: 3rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 h2 {
   font-size: 2rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 h3 {
   font-size: 1.15rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 p {
@@ -99,6 +104,27 @@ main {
 
 section {
   scroll-margin-top: 88px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* ---------- Eyebrow labels ---------- */
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 16px;
 }
 
 /* ---------- Buttons ---------- */
@@ -148,8 +174,10 @@ section {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(255, 255, 255, 0.96);
-  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.92);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .header-inner {
@@ -160,7 +188,7 @@ section {
 }
 
 .wordmark {
-  font-weight: 800;
+  font-weight: 700;
   font-size: 1.15rem;
   letter-spacing: -0.02em;
   text-decoration: none;
@@ -169,7 +197,7 @@ section {
 
 .wordmark span {
   color: var(--text-muted);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .site-nav {
@@ -181,7 +209,7 @@ section {
 .site-nav a {
   text-decoration: none;
   color: var(--text-muted);
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   font-weight: 500;
 }
 
@@ -217,10 +245,11 @@ section {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 56px;
-  align-items: start;
 }
 
 .hero-copy {
+  display: flex;
+  flex-direction: column;
   padding-top: 24px;
 }
 
@@ -234,7 +263,7 @@ section {
 
 .hero-points {
   list-style: none;
-  margin: 32px 0 0;
+  margin: 32px 0 40px;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -253,6 +282,32 @@ section {
   flex-shrink: 0;
 }
 
+/* Metric strip anchors the bottom of the hero copy column, so there is
+   no dead white space beneath the bullet points. */
+.hero-metrics {
+  margin-top: auto;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.hero-metric-value {
+  font-size: 2.5rem;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.hero-metric-label {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
 .hero-form {
   scroll-margin-top: 96px;
 }
@@ -262,16 +317,15 @@ section {
 .lead-form {
   background: #fff;
   border: 1px solid var(--border);
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  padding: 28px;
+  border-radius: var(--radius-lg);
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .form-heading h2 {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
 }
 
 .form-heading p {
@@ -312,6 +366,23 @@ section {
   color: #9a9a9e;
 }
 
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(22, 101, 52, 0.12);
+}
+
+.form-field select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
 .form-field input[aria-invalid="true"],
 .form-field select[aria-invalid="true"],
 .form-field textarea[aria-invalid="true"] {
@@ -326,7 +397,22 @@ section {
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 14px;
+}
+
+.note-toggle {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.note-toggle:hover {
+  color: var(--accent-dark);
 }
 
 .form-error {
@@ -382,8 +468,7 @@ section {
 .form-success {
   background: #fff;
   border: 1px solid var(--border);
-  border-radius: 16px;
-  box-shadow: var(--shadow);
+  border-radius: var(--radius-lg);
   padding: 40px 28px;
   text-align: center;
   display: flex;
@@ -416,8 +501,9 @@ section {
 
 .steps,
 .reasons,
+.compare,
 .faq {
-  padding: 88px 0;
+  padding: 112px 0;
 }
 
 .section-intro {
@@ -433,30 +519,26 @@ section {
   padding: 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 16px;
+  align-items: start;
 }
 
 .step-card {
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 28px;
+  padding: 24px;
 }
 
 .step-number {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--accent-soft);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   color: var(--accent);
-  font-weight: 800;
-  font-size: 1.1rem;
 }
 
 .step-card h3 {
-  margin-top: 20px;
+  margin-top: 16px;
 }
 
 .step-card p {
@@ -472,14 +554,30 @@ section {
   margin-top: 48px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 16px;
+  align-items: start;
 }
 
 .reason-card {
   background: #fff;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 28px;
+  padding: 24px;
+  transition: border-color 0.15s ease;
+}
+
+.reason-card:hover {
+  border-color: var(--border-hover);
+}
+
+.reason-icon {
+  display: inline-flex;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.reason-icon svg {
+  display: block;
 }
 
 .reason-card p {
@@ -487,33 +585,7 @@ section {
   color: var(--text-muted);
 }
 
-.band {
-  background: var(--text);
-  color: #fff;
-  padding: 40px 0;
-  text-align: center;
-}
-
-.band p {
-  font-size: 1.35rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-}
-
 /* ---------- Comparison ---------- */
-
-.compare {
-  padding: 88px 0;
-}
 
 .compare-table-wrap {
   margin-top: 40px;
@@ -543,15 +615,56 @@ section {
   font-weight: 700;
 }
 
+.compare-table th.col-us,
+.compare-table td.col-us {
+  background: var(--sage);
+}
+
 .compare-table tbody th {
   font-weight: 600;
   color: var(--text-muted);
   white-space: nowrap;
 }
 
-.compare-table tbody td:first-of-type {
+.compare-table td.col-us {
   font-weight: 600;
 }
+
+.check-cell {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.check-cell svg {
+  flex-shrink: 0;
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+/* ---------- Dark band ---------- */
+
+.band {
+  padding: 0;
+}
+
+.band-inner {
+  background: var(--text);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 40px 48px;
+  text-align: center;
+}
+
+.band p {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+}
+
+/* ---------- FAQ ---------- */
 
 .faq-inner {
   max-width: 800px;
@@ -574,7 +687,7 @@ section {
 .faq-item summary {
   list-style: none;
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 1.05rem;
   padding: 20px 40px 20px 0;
   position: relative;
@@ -610,7 +723,7 @@ section {
 
 .final-cta {
   background: var(--accent-soft);
-  padding: 88px 0;
+  padding: 96px 0;
 }
 
 .final-cta-inner {
@@ -722,6 +835,14 @@ section {
     padding-top: 0;
   }
 
+  .hero-metric-value {
+    font-size: 1.75rem;
+  }
+
+  .hero-metrics {
+    gap: 16px;
+  }
+
   .steps,
   .reasons,
   .compare,
@@ -736,6 +857,10 @@ section {
 
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .band-inner {
+    padding: 32px 24px;
   }
 
   .band p {

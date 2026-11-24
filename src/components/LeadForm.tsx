@@ -59,6 +59,7 @@ export default function LeadForm() {
   const [values, setValues] = useState<FormValues>(INITIAL_VALUES);
   const [errors, setErrors] = useState<FormErrors>({});
   const [status, setStatus] = useState<Status>("idle");
+  const [showNotes, setShowNotes] = useState(false);
 
   function update(field: keyof FormValues) {
     return (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -119,6 +120,7 @@ export default function LeadForm() {
     setValues(INITIAL_VALUES);
     setErrors({});
     setStatus("idle");
+    setShowNotes(false);
   }
 
   if (status === "success") {
@@ -148,30 +150,30 @@ export default function LeadForm() {
         <p>Takes about 2 minutes. Written offer within 24 hours. No obligation.</p>
       </div>
 
-      <div className="form-field">
-        <label htmlFor="field-name">
-          Your name <span aria-hidden="true">*</span>
-        </label>
-        <input
-          id="field-name"
-          name="name"
-          type="text"
-          autoComplete="name"
-          value={values.name}
-          onChange={update("name")}
-          aria-required="true"
-          aria-invalid={Boolean(errors.name)}
-          aria-describedby={errors.name ? "error-name" : undefined}
-          placeholder="Full name"
-        />
-        {errors.name && (
-          <p className="form-error" id="error-name" role="alert">
-            {errors.name}
-          </p>
-        )}
-      </div>
-
       <div className="form-row">
+        <div className="form-field">
+          <label htmlFor="field-name">
+            Your name <span aria-hidden="true">*</span>
+          </label>
+          <input
+            id="field-name"
+            name="name"
+            type="text"
+            autoComplete="name"
+            value={values.name}
+            onChange={update("name")}
+            aria-required="true"
+            aria-invalid={Boolean(errors.name)}
+            aria-describedby={errors.name ? "error-name" : undefined}
+            placeholder="Full name"
+          />
+          {errors.name && (
+            <p className="form-error" id="error-name" role="alert">
+              {errors.name}
+            </p>
+          )}
+        </div>
+
         <div className="form-field">
           <label htmlFor="field-phone">
             Phone <span aria-hidden="true">*</span>
@@ -194,7 +196,9 @@ export default function LeadForm() {
             </p>
           )}
         </div>
+      </div>
 
+      <div className="form-row">
         <div className="form-field">
           <label htmlFor="field-email">
             Email <span aria-hidden="true">*</span>
@@ -216,6 +220,24 @@ export default function LeadForm() {
               {errors.email}
             </p>
           )}
+        </div>
+
+        <div className="form-field">
+          <label htmlFor="field-timeline">
+            Timeline <span className="optional">(optional)</span>
+          </label>
+          <select
+            id="field-timeline"
+            name="timeline"
+            value={values.timeline}
+            onChange={update("timeline")}
+          >
+            <option value="">Select one</option>
+            <option value="As soon as possible">As soon as possible</option>
+            <option value="Within 30 days">Within 30 days</option>
+            <option value="Within 2-3 months">Within 2–3 months</option>
+            <option value="Just exploring">Just exploring for now</option>
+          </select>
         </div>
       </div>
 
@@ -242,37 +264,31 @@ export default function LeadForm() {
         )}
       </div>
 
-      <div className="form-field">
-        <label htmlFor="field-timeline">
-          How soon do you want to sell? <span className="optional">(optional)</span>
-        </label>
-        <select
-          id="field-timeline"
-          name="timeline"
-          value={values.timeline}
-          onChange={update("timeline")}
+      {!showNotes ? (
+        <button
+          type="button"
+          className="note-toggle"
+          onClick={() => setShowNotes(true)}
+          aria-expanded="false"
+          aria-controls="field-notes"
         >
-          <option value="">Select one</option>
-          <option value="As soon as possible">As soon as possible</option>
-          <option value="Within 30 days">Within 30 days</option>
-          <option value="Within 2-3 months">Within 2–3 months</option>
-          <option value="Just exploring">Just exploring for now</option>
-        </select>
-      </div>
-
-      <div className="form-field">
-        <label htmlFor="field-notes">
-          Anything we should know? <span className="optional">(optional)</span>
-        </label>
-        <textarea
-          id="field-notes"
-          name="notes"
-          rows={3}
-          value={values.notes}
-          onChange={update("notes")}
-          placeholder="Repairs needed, tenants, timeline, anything else"
-        />
-      </div>
+          + Add a note (optional)
+        </button>
+      ) : (
+        <div className="form-field">
+          <label htmlFor="field-notes">
+            Anything we should know? <span className="optional">(optional)</span>
+          </label>
+          <textarea
+            id="field-notes"
+            name="notes"
+            rows={3}
+            value={values.notes}
+            onChange={update("notes")}
+            placeholder="Repairs needed, tenants, timeline, anything else"
+          />
+        </div>
+      )}
 
       {/* Honeypot: hidden from real visitors, catches automated spam. */}
       <div className="honeypot" aria-hidden="true">
